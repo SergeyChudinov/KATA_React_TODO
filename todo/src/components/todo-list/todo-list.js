@@ -1,15 +1,19 @@
 import TodoListItem from '../todo-list-item';
+import PropTypes from "prop-types";
 import "./todo-list.css";
 
 function TodoList({ todos, onToggleProp, onDeleted, onItemChange }) {
-	const elements = todos.map(({ id, ...props }) => {
+
+	const elements = todos.map(({ id, editing, ...props }) => {
 		let classNames = "";
-		if (props.editing) {
+
+		if (editing) {
       classNames += " editing";
     } 
 		if (props.completed) {
       classNames += " completed";
     }
+
 		return (
       <li key={id} className={classNames}>
         <TodoListItem
@@ -28,5 +32,19 @@ function TodoList({ todos, onToggleProp, onDeleted, onItemChange }) {
 		</ul>
 	)
 }
+
+TodoList.defaultProps = {
+  todos: [],
+  onToggleProp: () => {},
+  onDeleted: () => {},
+  onItemChange: () => {},
+};
+
+TodoList.propTypes = {
+  todos: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onToggleProp: PropTypes.func,
+  onDeleted: PropTypes.func,
+  onItemChange: PropTypes.func,
+};
 
 export default TodoList;

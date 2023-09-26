@@ -1,9 +1,18 @@
 import { Component } from "react";
+import PropTypes from 'prop-types';
 import "./header.css";
 
 class Header extends Component {
   state = {
     label: "",
+  };
+
+  static defaultProps = {
+    onItemAdded: () => {},
+  };
+
+  static propTypes = {
+    onItemAdded: PropTypes.func
   };
 
   onLabelChange = (e) => {
@@ -14,7 +23,8 @@ class Header extends Component {
 
   onSubmit = (e) => {
     e.preventDefault();
-    this.props.onItemAdded(this.state.label);
+    const { onItemAdded } = this.props;
+    onItemAdded(this.state.label);
     this.setState({
       label: "",
     });
