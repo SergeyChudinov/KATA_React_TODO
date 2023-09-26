@@ -1,4 +1,5 @@
 import { Component } from "react";
+import PropTypes from "prop-types";
 import "./footer.css";
 
 class Footer extends Component {
@@ -8,13 +9,22 @@ class Footer extends Component {
     { name: "Completed", label: "Completed" },
   ];
 
+  static defaultProps = {
+    filter: "All",
+    todoCount: 1,
+    onFilterSelect: () => {},
+    onAllDeleted: () => {},
+  };
+
+  static propTypes = {
+    filter: PropTypes.string,
+    todoCount: PropTypes.number,
+    onFilterSelect: PropTypes.func,
+    onAllDeleted: PropTypes.func,
+  };
+
   render() {
-    const {
-      filter,
-      onFilterSelect,
-      onAllDeleted, 
-      todoCount
-    } = this.props;
+    const { filter, onFilterSelect, onAllDeleted, todoCount } = this.props;
 
     const items = this.buttonData.map(({ name }) => {
       const active = filter === name;

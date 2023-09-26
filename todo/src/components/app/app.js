@@ -7,32 +7,7 @@ class App extends Component {
   maxId = 100;
 
   state = {
-    todoData: [
-      {
-        class: "completed",
-        description: "Completed task",
-        created: "created 17 seconds ago",
-        completed: true,
-        editing: false,
-        id: 1,
-      },
-      {
-        class: "editing",
-        description: "Editing task",
-        created: "created 5 minutes ago",
-        completed: true,
-        editing: true,
-        id: 2,
-      },
-      {
-        class: "",
-        description: "Active task",
-        created: "reated 5 minutes ago",
-        completed: false,
-        editing: false,
-        id: 3,
-      },
-    ],
+    todoData: [],
     filter: "All",
   };
 
@@ -80,9 +55,8 @@ class App extends Component {
 
   addItem = (text) => {
     const newItem = {
-      class: "",
       description: text,
-      created: "reated 5 minutes ago",
+      created:  Date.now(),
       completed: false,
       editing: false,
       id: this.maxId++,
