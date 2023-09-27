@@ -1,34 +1,34 @@
-import { Component } from "react";
-import PropTypes from 'prop-types';
-import "./header.css";
+import { Component } from 'react'
+import PropTypes from 'prop-types'
+import './header.css'
 
 class Header extends Component {
   state = {
-    label: "",
-  };
+    label: '',
+  }
 
   static defaultProps = {
     onItemAdded: () => {},
-  };
+  }
 
   static propTypes = {
-    onItemAdded: PropTypes.func
-  };
+    onItemAdded: PropTypes.func,
+  }
 
   onLabelChange = (e) => {
     this.setState({
       label: e.target.value,
-    });
-  };
+    })
+  }
 
   onSubmit = (e) => {
-    e.preventDefault();
-    const { onItemAdded } = this.props;
-    onItemAdded(this.state.label);
+    e.preventDefault()
+    const { onItemAdded } = this.props
+    onItemAdded(this.state.label)
     this.setState({
-      label: "",
-    });
-  };
+      label: '',
+    })
+  }
 
   render() {
     return (
@@ -44,8 +44,8 @@ class Header extends Component {
           ></input>
         </form>
       </header>
-    );
+    )
   }
 }
 
-export default Header;
+export default Header
