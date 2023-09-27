@@ -5,7 +5,7 @@ import Main from '../main/main'
 import './app.css'
 
 class App extends Component {
-    maxId = 100
+  maxId = 100
 
   state = {
     todoData: [],
