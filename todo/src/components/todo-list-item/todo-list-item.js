@@ -6,6 +6,9 @@ import './todo-list-item.css'
 class TodoListItem extends Component {
   state = {
     label: this.props.description,
+    timer: 0,
+    isRunning: true,
+    timerInterval: null,
   }
 
   static defaultProps = {
@@ -26,6 +29,32 @@ class TodoListItem extends Component {
     onItemChange: PropTypes.func,
   }
 
+  componentDidMount() {
+    this.startTimer()
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerInterval)
+  }
+
+  startTimer() {
+    this.timerInterval = setInterval(() => {
+      if (this.state.isRunning) {
+        this.setState((state) => ({
+          timer: state.timer + 1,
+        }))
+      }
+    }, 1000)
+  }
+
+  stopTimer() {
+    this.setState({ isRunning: false })
+  }
+
+  playTimer() {
+    this.setState({ isRunning: true })
+  }
+
   onLabelChange = (e) => {
     this.setState({
       label: e.target.value,
@@ -38,9 +67,23 @@ class TodoListItem extends Component {
     onItemChange(this.state.label)
   }
 
+  formatTime(time) {
+    const hours = Math.floor(time / 3600)
+    const minutes = Math.floor((time % 3600) / 60)
+    const seconds = time % 60
+
+    return `${this.padZero(hours)}:${this.padZero(minutes)}:${this.padZero(seconds)}`
+  }
+
+  padZero(number) {
+    return number.toString().padStart(2, '0')
+  }
+
   render() {
     const { description, created, onToggleProp, onDeleted, completed } = this.props
+    const { timer } = this.state
 
+    const formattedTime = this.formatTime(timer)
     const time = formatDistanceToNow(created, { addSuffix: true })
 
     return (
@@ -48,10 +91,15 @@ class TodoListItem extends Component {
         <div className="view">
           <input className="toggle" type="checkbox" checked={completed} onChange={() => onToggleProp('completed')} />
           <label>
-            <span className="description" onClick={() => onToggleProp('completed')}>
+            <span className="title" onClick={() => onToggleProp('completed')}>
               {description}
             </span>
-            <span className="created">{time}</span>
+            <span className="description">
+              <button className="icon icon-play" onClick={() => this.playTimer()}></button>
+              <button className="icon icon-pause" onClick={() => this.stopTimer()}></button>
+              {formattedTime}
+            </span>
+            <span className="description">{time}</span>
           </label>
           <button className="icon icon-edit" onClick={() => onToggleProp('editing')}></button>
           <button className="icon icon-destroy" onClick={onDeleted}></button>
