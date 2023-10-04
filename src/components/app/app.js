@@ -1,24 +1,19 @@
-import { Component } from 'react'
+import { useState } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
 import Header from '../header/header'
 import Main from '../main/main'
 import './app.css'
 
-class App extends Component {
-  maxId = 100
+function App() {
+  const [todoData, setTodoData] = useState([])
+  const [filter, setFilter] = useState('All')
 
-  state = {
-    todoData: [],
-    filter: 'All',
+  const onFilterSelect = (filter) => {
+    setFilter(filter)
   }
 
-  onFilterSelect = (filter) => {
-    this.setState({
-      filter: filter,
-    })
-  }
-
-  filtePost = (items, filter) => {
+  const filtePost = (items, filter) => {
     switch (filter) {
       case 'Active':
         return items.filter((item) => !item.completed)
@@ -29,85 +24,73 @@ class App extends Component {
     }
   }
 
-  onToggleProp = (id, prop) => {
-    this.setState(({ todoData }) => ({
-      todoData: todoData.map((item) => {
+  const onToggleProp = (id, prop) => {
+    setTodoData((todoData) =>
+      todoData.map((item) => {
         if (item.id === id) {
           return { ...item, [prop]: !item[prop] }
         }
         return item
-      }),
-    }))
+      })
+    )
   }
 
-  deleteItem = (id) => {
-    this.setState(({ todoData }) => ({
-      todoData: todoData.filter((item) => {
+  const deleteItem = (id) => {
+    setTodoData((todoData) =>
+      todoData.filter((item) => {
         return item.id !== id
-      }),
-    }))
+      })
+    )
   }
 
-  deleteItems = () => {
-    this.setState({
-      todoData: [],
-    })
+  const deleteItems = () => {
+    setTodoData([])
   }
 
-  addItem = (text) => {
+  const addItem = (text) => {
     const newItem = {
       description: text,
       created: Date.now(),
       completed: false,
       editing: false,
-      id: this.maxId++,
+      id: uuidv4(),
     }
 
-    this.setState(({ todoData }) => {
-      const newArr = [...todoData, newItem]
-
-      return {
-        todoData: newArr,
-      }
-    })
+    setTodoData((todoData) => [...todoData, newItem])
   }
 
-  changeItem = (id, text) => {
-    this.setState(({ todoData }) => ({
-      todoData: todoData.map((item) => {
+  const changeItem = (id, text) => {
+    setTodoData((todoData) =>
+      todoData.map((item) => {
         if (item.id === id) {
           return { ...item, description: text, editing: !item.editing }
         }
         return item
-      }),
-    }))
-  }
-
-  render() {
-    let { todoData, filter } = this.state
-
-    const todoCount = todoData.filter((item) => {
-      return item.completed === false
-    }).length
-
-    const visibleData = this.filtePost(todoData, filter)
-
-    return (
-      <section className="todoapp">
-        <Header onItemAdded={this.addItem} />
-        <Main
-          todos={visibleData}
-          onToggleProp={this.onToggleProp}
-          onDeleted={this.deleteItem}
-          onAllDeleted={this.deleteItems}
-          onFilterSelect={this.onFilterSelect}
-          filter={filter}
-          todoCount={todoCount}
-          onItemChange={this.changeItem}
-        />
-      </section>
+      })
     )
   }
+
+  const todoCount = todoData.filter((item) => {
+    return item.completed === false
+  }).length
+
+  const visibleData = filtePost(todoData, filter)
+
+  return (
+    <section className="todoapp">
+      <Header onItemAdded={addItem} />
+      <Main
+        todos={visibleData}
+        onToggleProp={onToggleProp}
+        onDeleted={deleteItem}
+        onAllDeleted={deleteItems}
+        onFilterSelect={onFilterSelect}
+        filter={filter}
+        todoCount={todoCount}
+        onItemChange={changeItem}
+      />
+    </section>
+  )
 }
 
 export default App
